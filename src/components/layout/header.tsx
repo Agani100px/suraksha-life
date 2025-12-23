@@ -1,0 +1,124 @@
+"use client";
+
+import React, { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Menu, X } from "lucide-react";
+import { Montserrat } from "next/font/google";
+import { Button } from "@/components/ui/button";
+import { ACFData } from "@/types/acf";
+import { cn } from "@/lib/utils";
+
+const montserrat = Montserrat({
+    subsets: ["latin"],
+    weight: ["400", "700"],
+});
+
+interface HeaderProps {
+    data: ACFData;
+}
+
+const Header = ({ data }: HeaderProps) => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
+
+    return (
+        <header className="sticky top-0 z-50 w-full bg-[#ECF0F3] shadow-sm">
+            <div className="container mx-auto px-4 md:px-6 lg:px-8 h-24 flex items-center justify-between">
+                {/* Logo */}
+                <div className="flex-shrink-0">
+                    <Link href="/">
+                        <div className="relative h-24 w-72 md:h-28 md:w-96">
+                            <Image
+                                src="http://suraksha.local/wp-content/uploads/2025/12/03-b-1-scaled.png"
+                                alt="Suraksha Life Logo"
+                                fill
+                                className="object-contain object-left"
+                                priority
+                            />
+                        </div>
+                    </Link>
+                </div>
+
+                {/* Desktop Navigation */}
+                <nav className="hidden lg:flex items-center space-x-8">
+                    {data.nav_bar.map((item, index) => (
+                        <Link
+                            key={index}
+                            href={item.tab_link}
+                            className={cn(
+                                "text-sm font-bold text-slate-600 hover:text-[#05668D] transition-colors uppercase tracking-wide",
+                                montserrat.className
+                            )}
+                        >
+                            {item.nav_bar_tab_name}
+                        </Link>
+                    ))}
+                </nav>
+
+                {/* Desktop Button */}
+                <div className="hidden lg:block">
+                    {/* The user didn't strictly say this button should be dynamic from data.button_header, 
+                but passed empty strings in JSON for button_header. 
+                However, the image shows "Book An Appointment". 
+                I will fallback to "Book An Appointment" if data is empty or match the Hero button style/text if reasonable,
+                but strictly following "similarity to images" means hardcoding or using hero data if not provided in header data.
+                The prompt says "button_header": "", so I'll assume I should use a default text or check if I should use the one from the image.
+                "Use the given images and design it similarity". Image has "Book An Appointment".
+            */}
+                    <Button
+                        asChild
+                        className="bg-gradient-to-r from-[#05668D] to-[#02C39A] hover:opacity-90 text-white font-semibold py-5 px-6 rounded-md shadow-md transition-transform hover:scale-105"
+                    >
+                        <Link href={data.button_header_link || "#"}>
+                            {data.button_header || "Book An Appointment"}
+                        </Link>
+                    </Button>
+                </div>
+
+                {/* Mobile Menu Toggle */}
+                <div className="lg:hidden">
+                    <button
+                        onClick={toggleMenu}
+                        className="text-slate-700 hover:text-[#05668D] focus:outline-none"
+                    >
+                        {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                    </button>
+                </div>
+            </div>
+
+            {/* Mobile Navigation Menu */}
+            {isMenuOpen && (
+                <div className="lg:hidden bg-white border-t border-slate-200">
+                    <div className="px-4 py-4 space-y-4 flex flex-col items-center">
+                        {data.nav_bar.map((item, index) => (
+                            <Link
+                                key={index}
+                                href={item.tab_link}
+                                className="text-base font-bold text-slate-600 hover:text-[#05668D] transition-colors uppercase"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                {item.nav_bar_tab_name}
+                            </Link>
+                        ))}
+                        <div className="pt-2">
+                            <Button
+                                asChild
+                                className="bg-gradient-to-r from-[#05668D] to-[#02C39A] text-white font-semibold w-full"
+                            >
+                                <Link href={data.button_header_link || "#"}>
+                                    {data.button_header || "Book An Appointment"}
+                                </Link>
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </header>
+    );
+};
+
+export default Header;
