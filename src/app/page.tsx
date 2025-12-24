@@ -3,8 +3,9 @@ import Hero from "@/components/home/hero";
 import Facilities from "@/components/home/facilities";
 import AboutMe from "@/components/home/about-me";
 import Services from "@/components/home/services";
+import Events from "@/components/home/events";
 import { ACFData } from "@/types/acf";
-import { getPageData, getServicesData } from "@/lib/api";
+import { getPageData, getServicesData, getEventsData } from "@/lib/api";
 
 export default async function Home() {
   let pageData: ACFData | null = null;
@@ -13,9 +14,10 @@ export default async function Home() {
 
   try {
     // Fetch critical data in parallel
-    const [pageRes, servicesRes] = await Promise.allSettled([
+    const [pageRes, servicesRes, eventsRes] = await Promise.allSettled([
       getPageData(),
-      getServicesData()
+      getServicesData(),
+      getEventsData()
     ]);
 
     if (pageRes.status === 'fulfilled') {
@@ -26,6 +28,14 @@ export default async function Home() {
 
     if (servicesRes.status === 'fulfilled') {
       servicesData = servicesRes.value;
+    }
+
+    if (eventsRes.status === 'fulfilled') {
+      // Ensure specific typing if needed or pass as is
+      var eventsData = eventsRes.value || [];
+    } else {
+      console.error("Failed to fetch events:", eventsRes.reason);
+      var eventsData = [];
     }
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -75,7 +85,9 @@ export default async function Home() {
       {heroData && <Hero data={heroData} />}
       <Facilities data={pageData} />
       <AboutMe data={pageData} />
+
       <Services data={pageData} />
+      <Events data={pageData} events={eventsData} />
     </main>
   );
 }

@@ -99,4 +99,42 @@ export interface ACFData {
   ser_sub_title: string;
   service_available_time: string;
   services_list: ServiceItem[];
+  // Events Section
+  ev_title: string;
+  ev_section_title: string;
+  e_text_1: string;
+  e_doctor_name: string;
+  e_doctor_position: string;
+  e_text_2: string;
+  bullet_points: BulletPoint[];
+  events_doctor_image: ACFImage;
+  // Events Dynamic Section
+  ev_upcoming_ev_title: string;
+  recent_past_ev_title: string;
+  ev_booking_title: string;
+  ev_whatsapp_number: string;
+  button_3: string;
+  button_3_link: string;
+}
+
+export interface BulletPoint {
+  acf_fc_layout: string;
+  bullet_text: string;
+  bullet_icon: boolean | ACFImage; // User data showed boolean false or object
+}
+
+export interface EventItem {
+  id: number;
+  date: string;
+  slug: string;
+  title: {
+    rendered: string;
+  };
+  acf: {
+    event_name: string;
+    event_image: ACFImage;
+    event_location: string;
+    event_date_and_time: string; // "December 10, 2026 12:00 am"
+    event_description: string;
+  };
 }

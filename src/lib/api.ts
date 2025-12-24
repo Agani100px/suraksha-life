@@ -50,3 +50,24 @@ export async function getServicesData() {
     const services = await res.json();
     return services;
 }
+
+export async function getEventsData() {
+    if (!WORDPRESS_API_URL) {
+        throw new Error("NEXT_PUBLIC_WORDPRESS_URL is not defined");
+    }
+
+    // Fetch events ordered by date if possible, but standard WP API might need custom sorting or meta_key
+    // for now we fetch recent posts. We'll sort them in the component for simplicity unless we add a specific filter query.
+    // Fetching 100 to ensure we get upcoming and past.
+    const res = await fetch(`${WORDPRESS_API_URL}/wp-json/wp/v2/event?_embed&per_page=100`, {
+        next: { revalidate: 60 },
+    });
+
+    if (!res.ok) {
+        console.warn("Failed to fetch events data");
+        return [];
+    }
+
+    const events = await res.json();
+    return events;
+}

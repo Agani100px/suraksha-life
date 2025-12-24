@@ -46,7 +46,7 @@ const Services = ({ data }: ServicesProps) => {
             const cards = cardsRef.current?.children;
             if (cards) {
                 gsap.from(cards, {
-                    opacity: 0,
+                    // opacity: 0,
                     y: 50,
                     duration: 0.8,
                     stagger: 0.2,
@@ -116,15 +116,22 @@ const Services = ({ data }: ServicesProps) => {
                         data.services_list.map((service, index) => (
                             <div
                                 key={index}
-                                className="rounded-2xl p-8 flex flex-col items-start gap-6 transition-transform duration-300 hover:-translate-y-2"
+                                className="group relative rounded-2xl p-8 flex flex-col items-start gap-6 transition-all duration-300 hover:-translate-y-2 h-full overflow-hidden"
                                 style={{
                                     background: "linear-gradient(145deg, #E2E8EC, #FFFFFF)",
                                     boxShadow: "5px 5px 15px #D1D9E6, -5px -5px 15px #FFFFFF",
                                 }}
                             >
+                                {/* Background Overlay for Gradient on Hover */}
+                                <div
+                                    className="absolute inset-0 bg-gradient-to-r from-[#05668D] to-[#02C39A] opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out z-0"
+                                />
+
+
+
                                 {/* Icon Container - Circular Neumorphic */}
-                                <div className="relative">
-                                    <div className="w-16 h-16 rounded-full flex items-center justify-center bg-transparent">
+                                <div className="relative z-10">
+                                    <div className="w-16 h-16 rounded-full flex items-center justify-center bg-transparent group-hover:brightness-0 group-hover:invert transition-[filter] duration-300">
                                         {/* Note: In the design image, icons are simple blue outlines. 
                                             The provided data has image URLs. We will use Next/Image. */}
                                         <div className="relative w-8 h-8">
@@ -143,10 +150,10 @@ const Services = ({ data }: ServicesProps) => {
                                 </div>
 
                                 {/* Content */}
-                                <div className="space-y-4 w-full">
+                                <div className="space-y-4 w-full relative z-10">
                                     <h4
                                         className={cn(
-                                            "text-xl font-bold text-[#3C3E41]",
+                                            "text-xl font-bold text-[#3C3E41] group-hover:text-white transition-colors duration-300",
                                             montserrat.className
                                         )}
                                     >
@@ -155,10 +162,10 @@ const Services = ({ data }: ServicesProps) => {
 
                                     <div
                                         className={cn(
-                                            "text-slate-600 text-sm leading-relaxed",
+                                            "text-slate-600 text-sm leading-relaxed group-hover:text-white/90 transition-colors duration-300",
                                             "prose prose-sm max-w-none", // Tailwind prose for HTML content
                                             "prose-ul:list-disc prose-ul:pl-4 prose-ul:my-2",
-                                            "prose-li:marker:text-[#3C3E41]",
+                                            "prose-li:marker:text-[#3C3E41] group-hover:prose-li:marker:text-white", // Target markers
                                             "prose-p:my-2",
                                             poppins.className
                                         )}
