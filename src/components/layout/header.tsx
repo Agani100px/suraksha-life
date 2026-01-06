@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
@@ -23,6 +23,16 @@ import { usePathname } from "next/navigation";
 const Header = ({ data }: HeaderProps) => {
     const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 20);
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -90,14 +100,33 @@ const Header = ({ data }: HeaderProps) => {
     };
 
     return (
-        <header className="sticky top-0 z-50 w-full bg-[#ECF0F3] shadow-sm">
-            <div className="container mx-auto px-4 md:px-6 lg:px-8 h-24 flex items-center justify-between">
+        <header
+            className={cn(
+                "sticky top-0 z-50 w-full transition-all duration-300",
+                isScrolled
+                    ? "bg-[#ECF0F3]/90 backdrop-blur-md shadow-md"
+                    : "bg-[#ECF0F3] shadow-sm"
+            )}
+        >
+            <div
+                className={cn(
+                    "container mx-auto px-4 md:px-6 lg:px-8 flex items-center justify-between transition-all duration-300",
+                    isScrolled ? "h-20" : "h-24"
+                )}
+            >
                 {/* Logo */}
                 <div className="flex-shrink-0">
                     <Link href="/">
-                        <div className="relative h-24 w-72 md:h-28 md:w-96">
+                        <div
+                            className={cn(
+                                "relative transition-all duration-300",
+                                isScrolled
+                                    ? "h-10 w-28 md:h-12 md:w-36"
+                                    : "h-12 w-36 md:h-14 md:w-44"
+                            )}
+                        >
                             <Image
-                                src="http://suraksha.local/wp-content/uploads/2025/12/03-b-1-scaled.png"
+                                src="http://suraksha.local/wp-content/uploads/2026/01/logo.png"
                                 alt="Suraksha Life Logo"
                                 fill
                                 className="object-contain object-left"

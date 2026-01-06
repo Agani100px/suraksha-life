@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { Montserrat, Poppins } from "next/font/google";
 import { gsap } from "gsap";
@@ -134,9 +135,9 @@ const AboutMe = ({ data }: AboutMeProps) => {
                             asChild
                             className="bg-gradient-to-r from-[#05668D] to-[#02C39A] text-white hover:opacity-90 transition-opacity px-8 py-6 rounded-md text-lg font-medium shadow-lg hover:shadow-xl"
                         >
-                            <a href={data.button_2_link}>
+                            <Link href="/about">
                                 {data.button_2}
-                            </a>
+                            </Link>
                         </Button>
                     </div>
                 </div>
