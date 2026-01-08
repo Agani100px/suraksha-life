@@ -32,6 +32,8 @@ const Facilities = ({ data }: FacilitiesProps) => {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
+            if (!titleRef.current) return;
+
             // Animate Title Section
             gsap.from(titleRef.current, {
                 opacity: 0,

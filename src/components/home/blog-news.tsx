@@ -63,6 +63,8 @@ const BlogNews = ({ data, posts }: BlogNewsProps) => {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
+            if (!sectionRef.current) return;
+
             gsap.from(sectionRef.current, {
                 opacity: 0,
                 duration: 1,
@@ -72,16 +74,18 @@ const BlogNews = ({ data, posts }: BlogNewsProps) => {
                 },
             });
 
-            gsap.from(".blog-card", {
-                y: 50,
-                opacity: 0,
-                duration: 0.8,
-                stagger: 0.2,
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top 80%",
-                },
-            });
+            if (containerRef.current) {
+                gsap.from(".blog-card", {
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.8,
+                    stagger: 0.2,
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top 80%",
+                    },
+                });
+            }
         }, sectionRef);
 
         return () => ctx.revert();

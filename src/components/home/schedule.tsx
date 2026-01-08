@@ -32,6 +32,8 @@ const Schedule = ({ data }: ScheduleProps) => {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
+            if (!containerRef.current) return;
+
             gsap.from(containerRef.current, {
                 y: 50,
                 opacity: 0,
