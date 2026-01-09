@@ -178,6 +178,8 @@ export interface ACFData {
   social_media_details: SocialMediaDetail[];
   quick_links: QuickLink[];
   support: SupportLink[];
+  header_logo: ACFImage;
+  footer_logo: ACFImage;
 }
 
 export interface ContactDetail {
