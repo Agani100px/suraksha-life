@@ -9,8 +9,8 @@ export const PUBLIC_WORDPRESS_URL = "https://web.surakshalife.com";
 // Helper to sanitize URLs in the response
 function sanitizeData(data: any): any {
     if (typeof data === 'string') {
-        // Replace http://suraksha.local with https://web.surakshalife.com
-        return data.replace(/http:\/\/suraksha\.local/g, "https://web.surakshalife.com");
+        // Replace http(s)://suraksha.local with https://web.surakshalife.com
+        return data.replace(/https?:\/\/suraksha\.local/g, "https://web.surakshalife.com");
     } else if (Array.isArray(data)) {
         return data.map(item => sanitizeData(item));
     } else if (typeof data === 'object' && data !== null) {
@@ -159,4 +159,23 @@ export async function getResourcesData() {
     }).filter((item: any) => item !== null);
 
     return sanitizeData(resources);
+}
+
+export async function getEventBySlug(slug: string) {
+    if (!WORDPRESS_API_URL) {
+        throw new Error("NEXT_PUBLIC_WORDPRESS_URL is not defined");
+    }
+
+    const res = await fetch(`${WORDPRESS_API_URL}/wp-json/wp/v2/event?slug=${slug}&_embed`, {
+        next: { revalidate: 60 },
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch event");
+    }
+
+    const events = await res.json();
+    if (!events.length) return null;
+
+    return sanitizeData(events[0]);
 }

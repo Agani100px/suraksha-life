@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { EventItem } from "@/types/acf";
 import { Calendar as CalendarIcon, MapPin } from "lucide-react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Montserrat } from "next/font/google";
 import { format } from "date-fns";
@@ -40,9 +41,10 @@ const PastEvents = ({ events, title, onSelectEvent }: PastEventsProps) => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Left: Featured Event */}
-                <div
-                    onClick={() => onSelectEvent(featuredEvent)}
-                    className="h-full rounded-2xl p-4 lg:p-6 flex flex-col justify-between gap-4 transition-all duration-300 hover:shadow-lg cursor-pointer"
+                <Link
+                    href={`/events/${featuredEvent.slug}`}
+                    id={`event-${featuredEvent.id}`}
+                    className="h-full rounded-2xl p-4 lg:p-6 flex flex-col justify-between gap-4 transition-all duration-300 hover:shadow-lg cursor-pointer block"
                     style={{
                         background: "linear-gradient(145deg, #E2E8EC, #FFFFFF)",
                         boxShadow: "5px 5px 15px #D1D9E6, -5px -5px 15px #FFFFFF",
@@ -84,24 +86,23 @@ const PastEvents = ({ events, title, onSelectEvent }: PastEventsProps) => {
                             <h4 className="font-semibold text-[#3C3E41] mb-1">Over 200 community members participated in the session on:</h4>
                             {/* Assuming content is plain text with line breaks, rendering roughly */}
                             <div className="space-y-1">
-                                {featuredEvent.acf.event_description.split("\r\n").map((line, i) => (
-                                    <div key={i} className="flex items-start gap-2">
-                                        <span className="mt-1.5 w-1 h-1 bg-slate-400 rounded-full flex-shrink-0" />
-                                        <span>{line}</span>
-                                    </div>
-                                ))}
+                                <div
+                                    className="line-clamp-3 prose prose-sm prose-slate max-w-none space-y-1 [&>p]:m-0 [&>ul]:m-0 [&>li]:m-0"
+                                    dangerouslySetInnerHTML={{ __html: featuredEvent.acf.event_description }}
+                                />
                             </div>
                         </div>
                     </div>
-                </div>
+                </Link>
 
                 {/* Right: Other Past Events List */}
                 <div className="h-full flex flex-col justify-between gap-4">
                     {otherEvents.map(event => (
-                        <div
+                        <Link
                             key={event.id}
-                            onClick={() => onSelectEvent(event)}
-                            className="flex-1 rounded-xl p-4 flex gap-4 items-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer"
+                            id={`event-${event.id}`}
+                            href={`/events/${event.slug}`}
+                            className="flex-1 rounded-xl p-4 flex gap-4 items-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer block"
                             style={{
                                 background: "linear-gradient(145deg, #E2E8EC, #FFFFFF)",
                                 boxShadow: "5px 5px 15px #D1D9E6, -5px -5px 15px #FFFFFF",
@@ -135,7 +136,7 @@ const PastEvents = ({ events, title, onSelectEvent }: PastEventsProps) => {
                                     <span>{event.acf.event_location}</span>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>

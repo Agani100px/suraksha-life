@@ -254,6 +254,11 @@ export interface EventItem {
     event_location: string;
     event_date_and_time: string; // "December 10, 2026 12:00 am"
     event_description: string;
+    past_events_details_more?: string;
+    past_event_image?: {
+      acf_fc_layout: string;
+      past_event_img: ACFImage;
+    }[];
   };
 }
 

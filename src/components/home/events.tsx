@@ -155,7 +155,7 @@ const Events = ({ data, events = [] }: EventsProps) => {
 
                         {/* Description Text (HTML) */}
                         <div
-                            className={cn("text-slate-600 leading-relaxed", poppins.className)}
+                            className={cn("prose prose-slate max-w-none text-slate-600 leading-relaxed", poppins.className)}
                             dangerouslySetInnerHTML={createMarkup(data.e_text_2)}
                         />
 

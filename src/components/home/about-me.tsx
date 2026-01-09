@@ -124,7 +124,7 @@ const AboutMe = ({ data }: AboutMeProps) => {
 
                     <div
                         className={cn(
-                            "text-slate-600 text-base leading-relaxed space-y-4 prose max-w-none prose-p:my-2 prose-strong:text-[#05668D]",
+                            "text-slate-600 text-base leading-relaxed space-y-4 prose max-w-none prose-p:my-2 prose-strong:text-[#3C3E41]",
                             poppins.className
                         )}
                         dangerouslySetInnerHTML={createMarkup(data.doctor_about_description)}

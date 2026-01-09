@@ -85,17 +85,19 @@ const EventDetailModal = ({ event, onClose }: EventDetailModalProps) => {
                     <X size={24} />
                 </button>
 
-                {/* Header Image */}
-                <div className="relative w-full h-64 md:h-80 flex-shrink-0 bg-slate-100">
+                {/* Header Image - Full Uncropped */}
+                <div className="relative w-full bg-slate-100 flex justify-center">
                     {event.acf.event_image?.url ? (
                         <Image
                             src={event.acf.event_image.url}
                             alt={event.acf.event_name}
-                            fill
-                            className="object-cover"
+                            width={event.acf.event_image.width || 800} // Fallback width
+                            height={event.acf.event_image.height || 600} // Fallback height
+                            className="w-full h-auto max-h-[60vh] object-contain"
+                            priority
                         />
                     ) : (
-                        <div className="w-full h-full flex items-center justify-center text-slate-400">
+                        <div className="w-full h-64 flex items-center justify-center text-slate-400">
                             <span className="flex flex-col items-center gap-2">
                                 <CalendarIcon size={48} />
                                 No Image
@@ -142,9 +144,39 @@ const EventDetailModal = ({ event, onClose }: EventDetailModalProps) => {
                     {/* Divider */}
                     <div className="h-px w-full bg-slate-100 mb-6"></div>
 
-                    {/* Description */}
+                    {/* Description Content */}
                     <div className={cn("prose prose-slate max-w-none text-slate-600 leading-relaxed", poppins.className)}>
-                        <div dangerouslySetInnerHTML={{ __html: event.acf.event_description }} />
+                        {/* Check if we have the "Detailed" content for Past Events */}
+                        {event.acf.past_events_details_more ? (
+                            <>
+                                {/* Render the main detailed article content */}
+                                <div dangerouslySetInnerHTML={{ __html: event.acf.past_events_details_more }} />
+
+                                {/* Render Additional Past Event Images (Gallery-like) */}
+                                {event.acf.past_event_image && event.acf.past_event_image.length > 0 && (
+                                    <div className="mt-8 space-y-6">
+                                        <h3 className="text-xl font-bold text-[#05668D]">Event Gallery</h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {event.acf.past_event_image.map((item, index) => (
+                                                <div key={index} className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                                                    {item.past_event_img?.url && (
+                                                        <Image
+                                                            src={item.past_event_img.url}
+                                                            alt={item.past_event_img.alt || `Event Image ${index + 1}`}
+                                                            fill
+                                                            className="object-cover"
+                                                        />
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        ) : (
+                            /* Fallback for Upcoming Events (Simple Description) */
+                            <div dangerouslySetInnerHTML={{ __html: event.acf.event_description }} />
+                        )}
                     </div>
                 </div>
 

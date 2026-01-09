@@ -32,6 +32,7 @@ const Hero = ({ data }: HeroProps) => {
         const ctx = gsap.context(() => {
             const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
+            // Animate Text Content
             tl.fromTo(
                 textRef.current,
                 { opacity: 0, x: -50 },
@@ -47,21 +48,44 @@ const Hero = ({ data }: HeroProps) => {
                     },
                     "-=0.5"
                 );
+
+            // Typewriter Animation for Name
+            tl.fromTo(
+                ".char-anim",
+                { opacity: 0 },
+                {
+                    opacity: 1,
+                    stagger: 0.08, // Adjust speed: 0.08s per character = typical typing speed
+                    duration: 0.05, // Instant appearance of each char
+                    ease: "none",
+                },
+                "-=0.6"
+            );
         }, containerRef);
+
 
         return () => ctx.revert();
     }, []);
 
     // Parse name into Greeting, First Name, Last Name
     // Robust regex: Matches (Anything treated as greeting) + (Last two words as name)
-    // Examples handled: "Hi, I'm Vihanga Wijesinghe", "Hi, I m Vihanga Wijesinghe", "Dr. Sameera Gunawardena"
-    // Using [\s\S] instead of dotAll /s flag for better compatibility
     const nameMatch = data.doctor_name.match(/^([\s\S]*?)\s+(\S+)\s+(\S+)$/);
+
 
     // Fallback if regex doesn't match perfectly
     const greeting = nameMatch ? nameMatch[1] : "";
     const firstName = nameMatch ? nameMatch[2] : "";
     const lastName = nameMatch ? nameMatch[3] : data.doctor_name;
+
+    // Helper to split text into animated chars
+    const splitText = (text: string) => {
+        return text.split("").map((char, index) => (
+            <span key={index} className="char-anim inline-block opacity-0 origin-bottom">
+                {char === " " ? "\u00A0" : char}
+            </span>
+        ));
+    };
+
 
     // If no match, we might just have the name or a different format. 
     // In that case, lastName holds the full string, others empty.
@@ -69,7 +93,7 @@ const Hero = ({ data }: HeroProps) => {
     return (
         <section
             ref={containerRef}
-            className="relative w-full min-h-[90vh] flex items-center overflow-hidden"
+            className="relative w-[100vw] ml-[calc(50%-50vw)] min-h-[90vh] flex items-center overflow-hidden"
         >
             {/* 1. Full Cover Background Image */}
             <div className="absolute inset-0 z-0 bg-[#ECF0F3]"> {/* Added background color for safe area */}
@@ -77,7 +101,7 @@ const Hero = ({ data }: HeroProps) => {
                     src={data.doctor_hero_image?.url || "http://suraksha.local/wp-content/uploads/2025/12/10-copy.jpg"}
                     alt={data.doctor_hero_image?.alt || "Hero Background"}
                     fill
-                    className="object-contain object-right" // Changed to contain and align right to show full image
+                    className="object-cover object-right" // Changed to cover to ensuring full width fill
                     priority
                 />
             </div>
@@ -97,17 +121,22 @@ const Hero = ({ data }: HeroProps) => {
                         {/* Line 1: Hi, I'm Vihanga */}
                         {greeting && firstName ? (
                             <span className="text-[#1E2125]">
-                                {greeting} <span className="text-[#05668D]">{firstName}</span>
+                                {splitText(greeting)}
+                                <span className="text-[#05668D] inline-block ml-3">
+                                    {splitText(firstName)}
+                                </span>
                             </span>
                         ) : (
                             // Fallback if parsing failed
-                            <span className="text-[#05668D]">{data.doctor_name}</span>
+                            <span className="text-[#05668D]">
+                                {splitText(data.doctor_name)}
+                            </span>
                         )}
 
                         {/* Line 2: Wijesinghe */}
                         {lastName && greeting && (
                             <span className="block text-[#05668D]">
-                                {lastName}
+                                {splitText(lastName)}
                             </span>
                         )}
                     </h1>
