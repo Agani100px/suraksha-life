@@ -6,6 +6,8 @@ import Image from "next/image";
 import { Montserrat, Poppins } from "next/font/google"; // Using fonts consistent with the design
 import { ACFData } from "@/types/acf";
 import { cn } from "@/lib/utils";
+import { PUBLIC_WORDPRESS_URL } from "@/lib/api";
+
 
 const montserrat = Montserrat({
     subsets: ["latin"],
@@ -92,7 +94,7 @@ const Footer = ({ data }: FooterProps) => {
                         {/* Logo - Sizes Decreased as requested */}
                         <div className="mb-1 mt-1">
                             <Image
-                                src={data.footer_logo?.url || data.header_logo?.url || `${process.env.NEXT_PUBLIC_WORDPRESS_URL || "https://web.surakshalife.com"}/wp-content/uploads/2026/01/logo.png`}
+                                src={data.footer_logo?.url || data.header_logo?.url || `${PUBLIC_WORDPRESS_URL}/wp-content/uploads/2026/01/logo.png`}
                                 alt="Suraksha Life Logo"
                                 width={160}
                                 height={60}

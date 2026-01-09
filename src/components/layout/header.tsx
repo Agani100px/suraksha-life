@@ -8,6 +8,8 @@ import { Montserrat } from "next/font/google";
 import { Button } from "@/components/ui/button";
 import { ACFData } from "@/types/acf";
 import { cn } from "@/lib/utils";
+import { PUBLIC_WORDPRESS_URL } from "@/lib/api";
+
 
 const montserrat = Montserrat({
     subsets: ["latin"],
@@ -126,7 +128,7 @@ const Header = ({ data }: HeaderProps) => {
                             )}
                         >
                             <Image
-                                src={data.header_logo?.url || `${process.env.NEXT_PUBLIC_WORDPRESS_URL || "https://web.surakshalife.com"}/wp-content/uploads/2026/01/logo.png`}
+                                src={data.header_logo?.url || `${PUBLIC_WORDPRESS_URL}/wp-content/uploads/2026/01/logo.png`}
                                 alt="Suraksha Life Logo"
                                 fill
                                 className="object-contain object-left"

@@ -1,6 +1,10 @@
 
 const WORDPRESS_API_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL;
 
+// Export a robust public URL for frontend components to use
+export const PUBLIC_WORDPRESS_URL = "https://web.surakshalife.com";
+
+
 
 // Helper to sanitize URLs in the response
 function sanitizeData(data: any): any {
