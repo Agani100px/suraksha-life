@@ -19,6 +19,7 @@ interface UpcomingEventsProps {
 
 const UpcomingEvents = ({ events, allEvents, onSelectEvent }: UpcomingEventsProps) => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [currentPage, setCurrentPage] = useState(0);
 
     // Filter events for selected date from ALL events (past + upcoming)
     const eventsOnSelectedDate = selectedDate
@@ -42,57 +43,81 @@ const UpcomingEvents = ({ events, allEvents, onSelectEvent }: UpcomingEventsProp
                 {/* Left: Upcoming Events List (Desktop: col-span-7) */}
                 {/* Always show upcoming events list here, regardless of calendar selection */}
                 <div className="lg:col-span-7 space-y-4">
-                    {/* Show limited list of upcoming events */}
-                    {events.slice(0, 3).length > 0 ? (
-                        events.slice(0, 3).map((event) => (
-                            <div
-                                key={event.id}
-                                onClick={() => onSelectEvent(event)}
-                                className="rounded-xl p-6 flex flex-col md:flex-row gap-6 items-start transition-all duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer"
-                                style={{
-                                    background: "linear-gradient(145deg, #E2E8EC, #FFFFFF)",
-                                    boxShadow: "5px 5px 15px #D1D9E6, -5px -5px 15px #FFFFFF",
-                                }}
-                            >
-                                {/* Event Image Thumbnail */}
-                                <div className="w-20 h-20 md:w-24 md:h-24 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 relative">
-                                    {event.acf.event_image?.url ? (
-                                        <Image
-                                            src={event.acf.event_image.url}
-                                            alt={event.acf.event_name}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-slate-300">
-                                            <CalendarIcon className="w-8 h-8" />
+                    {/* Paginated Upcoming Events List */}
+                    {events.length > 0 ? (
+                        <>
+                            <div className="space-y-4 min-h-[400px]">
+                                {events.slice(currentPage * 3, (currentPage + 1) * 3).map((event) => (
+                                    <div
+                                        key={event.id}
+                                        onClick={() => onSelectEvent(event)}
+                                        className="w-full h-[140px] rounded-xl p-6 flex flex-col md:flex-row gap-6 items-start transition-all duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer"
+                                        style={{
+                                            background: "linear-gradient(145deg, #E2E8EC, #FFFFFF)",
+                                            boxShadow: "5px 5px 15px #D1D9E6, -5px -5px 15px #FFFFFF",
+                                        }}
+                                    >
+                                        {/* Event Image Thumbnail */}
+                                        <div className="w-20 h-20 md:w-24 md:h-24 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 relative">
+                                            {event.acf.event_image?.url ? (
+                                                <Image
+                                                    src={event.acf.event_image.url}
+                                                    alt={event.acf.event_name}
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-slate-300">
+                                                    <CalendarIcon className="w-8 h-8" />
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
-                                </div>
 
-                                {/* Content */}
-                                <div className="flex-1 space-y-2">
-                                    <h3 className="text-[#05668D] font-bold text-lg">
-                                        {event.acf.event_name}
-                                    </h3>
+                                        {/* Content */}
+                                        <div className="flex-1 space-y-2">
+                                            <h3 className="text-[#05668D] font-bold text-lg">
+                                                {event.acf.event_name}
+                                            </h3>
 
-                                    <div className="flex flex-col gap-1 text-sm text-slate-500">
-                                        <div className="flex items-center gap-2">
-                                            <MapPin className="w-4 h-4 text-slate-400" />
-                                            <span>{event.acf.event_location}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <CalendarIcon className="w-4 h-4 text-slate-400" />
-                                            <span>
-                                                {/* Parsing date string if it's "December 10, 2026 12:00 am" */}
-                                                {/* Safely handle potentially invalid dates if format varies */}
-                                                {event.acf.event_date_and_time}
-                                            </span>
+                                            <div className="flex flex-col gap-1 text-sm text-slate-500">
+                                                <div className="flex items-center gap-2">
+                                                    <MapPin className="w-4 h-4 text-slate-400" />
+                                                    <span>{event.acf.event_location}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <CalendarIcon className="w-4 h-4 text-slate-400" />
+                                                    <span>
+                                                        {event.acf.event_date_and_time}
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                ))}
                             </div>
-                        ))
+
+                            {/* Pagination Dots */}
+                            {events.length > 3 && (
+                                <div className="flex justify-center gap-2 mt-6">
+                                    {Array.from({ length: Math.ceil(events.length / 3) }).map((_, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setCurrentPage(index);
+                                            }}
+                                            className={cn(
+                                                "w-3 h-3 rounded-full transition-all duration-300",
+                                                currentPage === index
+                                                    ? "bg-[#05668D] w-6"
+                                                    : "bg-slate-300 hover:bg-slate-400"
+                                            )}
+                                            aria-label={`Go to page ${index + 1}`}
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </>
                     ) : (
                         <div className="text-center py-10 bg-slate-50 rounded-xl border border-dashed border-slate-300">
                             <p className="text-slate-500 text-sm">No Upcoming Events.</p>

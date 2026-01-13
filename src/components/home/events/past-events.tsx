@@ -18,9 +18,11 @@ interface PastEventsProps {
 }
 
 const PastEvents = ({ events, title, onSelectEvent }: PastEventsProps) => {
+    const [currentPage, setCurrentPage] = useState(0);
+
     // Determine the featured event (most recent past event)
     const featuredEvent = events[0];
-    const otherEvents = events.slice(1, 4); // Show next 3
+    const otherEvents = events.slice(1); // Show all remaining events
 
     if (!featuredEvent) return null;
 
@@ -95,49 +97,73 @@ const PastEvents = ({ events, title, onSelectEvent }: PastEventsProps) => {
                     </div>
                 </Link>
 
-                {/* Right: Other Past Events List */}
-                <div className="h-full flex flex-col justify-between gap-4">
-                    {otherEvents.map(event => (
-                        <Link
-                            key={event.id}
-                            id={`event-${event.id}`}
-                            href={`/events/${event.slug}`}
-                            className="flex-1 rounded-xl p-4 flex gap-4 items-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer block"
-                            style={{
-                                background: "linear-gradient(145deg, #E2E8EC, #FFFFFF)",
-                                boxShadow: "5px 5px 15px #D1D9E6, -5px -5px 15px #FFFFFF",
-                            }}
-                        >
-                            <div className="w-24 h-24 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 relative">
-                                {event.acf.event_image?.url ? (
-                                    <Image
-                                        src={event.acf.event_image.url}
-                                        alt={event.acf.event_name}
-                                        fill
-                                        className="object-cover"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center">
-                                        <CalendarIcon className="w-6 h-6 text-slate-300" />
-                                    </div>
-                                )}
-                            </div>
+                {/* Right: Other Past Events List - Paginated */}
+                <div className="h-full flex flex-col gap-4">
+                    <div className="flex flex-col gap-4 min-h-[400px]">
+                        {otherEvents.slice(currentPage * 3, (currentPage + 1) * 3).map(event => (
+                            <Link
+                                key={event.id}
+                                id={`event-${event.id}`}
+                                href={`/events/${event.slug}`}
+                                className="w-full h-[130px] rounded-xl p-4 flex gap-4 items-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer block"
+                                style={{
+                                    background: "linear-gradient(145deg, #E2E8EC, #FFFFFF)",
+                                    boxShadow: "5px 5px 15px #D1D9E6, -5px -5px 15px #FFFFFF",
+                                }}
+                            >
+                                <div className="w-24 h-24 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 relative">
+                                    {event.acf.event_image?.url ? (
+                                        <Image
+                                            src={event.acf.event_image.url}
+                                            alt={event.acf.event_name}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center">
+                                            <CalendarIcon className="w-6 h-6 text-slate-300" />
+                                        </div>
+                                    )}
+                                </div>
 
-                            <div className="flex-1">
-                                <div className="flex items-center gap-2 text-xs font-bold text-[#05668D] mb-1">
-                                    <CalendarIcon className="w-3 h-3" />
-                                    <span>{formatDate(event.acf.event_date_and_time)}</span>
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-2 text-xs font-bold text-[#05668D] mb-1">
+                                        <CalendarIcon className="w-3 h-3" />
+                                        <span>{formatDate(event.acf.event_date_and_time)}</span>
+                                    </div>
+                                    <h4 className="font-bold text-[#3C3E41] text-sm mb-1 line-clamp-2">
+                                        {event.acf.event_name}
+                                    </h4>
+                                    <div className="flex items-center gap-1 text-xs text-slate-500">
+                                        <MapPin className="w-3 h-3" />
+                                        <span>{event.acf.event_location}</span>
+                                    </div>
                                 </div>
-                                <h4 className="font-bold text-[#3C3E41] text-sm mb-1 line-clamp-2">
-                                    {event.acf.event_name}
-                                </h4>
-                                <div className="flex items-center gap-1 text-xs text-slate-500">
-                                    <MapPin className="w-3 h-3" />
-                                    <span>{event.acf.event_location}</span>
-                                </div>
-                            </div>
-                        </Link>
-                    ))}
+                            </Link>
+                        ))}
+                    </div>
+
+                    {/* Pagination Dots */}
+                    {otherEvents.length > 3 && (
+                        <div className="flex justify-center gap-2 mt-4">
+                            {Array.from({ length: Math.ceil(otherEvents.length / 3) }).map((_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={(e) => {
+                                        e.preventDefault(); // Prevent link navigation
+                                        setCurrentPage(index);
+                                    }}
+                                    className={cn(
+                                        "w-3 h-3 rounded-full transition-all duration-300",
+                                        currentPage === index
+                                            ? "bg-[#05668D] w-6"
+                                            : "bg-slate-300 hover:bg-slate-400"
+                                    )}
+                                    aria-label={`Go to page ${index + 1}`}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

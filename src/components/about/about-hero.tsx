@@ -23,17 +23,13 @@ export default function AboutHero() {
             const tl = gsap.timeline();
 
             // Initial Load Animation
-            tl.from(containerRef.current, {
+            // Removed container opacity animation to prevent flash/different loading feel
+            tl.from(titleRef.current, {
+                y: 100,
                 opacity: 0,
-                duration: 1,
-                ease: "power2.out",
+                duration: 1.2,
+                ease: "back.out(1.7)",
             })
-                .from(titleRef.current, {
-                    y: 100,
-                    opacity: 0,
-                    duration: 1.2,
-                    ease: "back.out(1.7)",
-                }, "-=0.5")
                 .from(subtitleRef.current, {
                     y: 50,
                     opacity: 0,

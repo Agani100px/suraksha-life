@@ -298,6 +298,30 @@ export interface ShortItem {
   };
 }
 
+// About Page New Data (Page 564)
+export interface AboutPageData {
+  doctor_image_aboutme_page: {
+    acf_fc_layout: string;
+    doctor_img_aboutme_page: ACFImage;
+  }[];
+  doctor_name: string;
+  doctor_about_in_about_page: string;
+  clinical_and_community_focus_sub_heading: string;
+  clinical_and_community_focus_description: string;
+  "education_&_professional_background_sub_heading": string;
+  "education_&_professional_background_description": string;
+  professional_philosophy_sub_heading: string;
+  professional_philosophy_description: string;
+  about_suraksha_life_title: string;
+  suraksha_life_description_: string;
+  our_core_focus_areas_sub_heading: string;
+  our_core_focus_areas_description: string;
+  our_impact_sub_heading: string;
+  our_impact_description: string;
+  our_commitment: string;
+  our_commitment_description: string;
+}
+
 export interface TestimonialItem {
   acf_fc_layout: string;
   user_photo_feedback: ACFImage;

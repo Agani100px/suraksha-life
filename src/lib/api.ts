@@ -175,7 +175,22 @@ export async function getEventBySlug(slug: string) {
     }
 
     const events = await res.json();
-    if (!events.length) return null;
-
     return sanitizeData(events[0]);
+}
+
+export async function getAboutPageNewData() {
+    if (!WORDPRESS_API_URL) {
+        throw new Error("NEXT_PUBLIC_WORDPRESS_URL is not defined");
+    }
+
+    const res = await fetch(`${WORDPRESS_API_URL}/wp-json/wp/v2/pages/564?_embed`, {
+        next: { revalidate: 60 },
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch about page data");
+    }
+
+    const page = await res.json();
+    return sanitizeData(page.acf);
 }

@@ -1,44 +1,32 @@
-import Footer from "@/components/layout/footer";
-import Header from "@/components/layout/header";
-
+import React from "react";
+import { getPageData, getAboutPageNewData } from "@/lib/api";
 import AboutHero from "@/components/about/about-hero";
-import AboutMe from "@/components/home/about-me";
-import Facilities from "@/components/home/facilities";
-import Testimonial from "@/components/home/testimonial";
-import { getPageData } from "@/lib/api";
-import { ACFData } from "@/types/acf";
+import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
+import AboutContent from "@/components/about/about-content"; // Import the client component
+
+export const metadata = {
+    title: "About Us | Suraksha Life",
+    description: "Learn more about Suraksha Life and our commitment to healthcare.",
+};
 
 export default async function AboutPage() {
-    let pageData: ACFData | null = null;
-    let errorMsg = "";
+    const [homeData, aboutData] = await Promise.all([
+        getPageData(),
+        getAboutPageNewData()
+    ]);
 
-    try {
-        // Reuse home page data for now since About content (AboutMe) is there
-        // In a real scenario, we might call getAboutPageData()
-        pageData = await getPageData();
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        errorMsg = "Failed to load content.";
-    }
-
-    if (!pageData) {
-        return (
-            <main className="min-h-screen bg-white flex items-center justify-center">
-                <p className="text-red-500">{errorMsg}</p>
-            </main>
-        );
-    }
+    if (!homeData || !aboutData) return null;
 
     return (
         <main className="min-h-screen bg-white">
-            <Header data={pageData} />
+            <Header data={homeData} />
+
             <AboutHero />
-            <div className="pt-10">
-                <AboutMe data={pageData} />
-            </div>
-            <Facilities data={pageData} />
-            <Testimonial data={pageData} />
-            <Footer data={pageData} />
+
+            <AboutContent data={aboutData} />
+
+            <Footer data={homeData} />
         </main>
     );
 }
