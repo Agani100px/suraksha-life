@@ -210,6 +210,7 @@ export interface SupportLink {
 export interface BlogPost {
   id: number;
   date: string;
+  slug: string;
   link: string;
   title: {
     rendered: string;

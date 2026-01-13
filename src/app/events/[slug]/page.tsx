@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import { format } from "date-fns";
 import { MapPin, Clock, Calendar as CalendarIcon, ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { getEventBySlug } from "@/lib/api";
+import { getEventBySlug, getEventsData } from "@/lib/api";
 import { EventItem } from "@/types/acf";
 import { cn } from "@/lib/utils";
 import { Montserrat, Poppins } from "next/font/google";
@@ -19,6 +19,7 @@ export default function EventPage() {
     const params = useParams();
     const [event, setEvent] = useState<EventItem | null>(null);
     const [loading, setLoading] = useState(true);
+    const [allEvents, setAllEvents] = useState<EventItem[]>([]);
 
     useEffect(() => {
         const fetchEvent = async () => {
@@ -34,8 +35,24 @@ export default function EventPage() {
             }
         };
 
+        const fetchAllEvents = async () => {
+            try {
+                const data = await getEventsData();
+                setAllEvents(data);
+            } catch (error) {
+                console.error("Failed to fetch all events", error);
+            }
+        }
+
         fetchEvent();
+        fetchAllEvents();
     }, [params]);
+
+    // Determine Prev/Next events
+    // Note: Events might be sorted by date, but ID mapping works for list position
+    const currentIndex = event && allEvents.length > 0 ? allEvents.findIndex(p => p.id === event.id) : -1;
+    const prevEvent = currentIndex > 0 ? allEvents[currentIndex - 1] : null;
+    const nextEvent = currentIndex >= 0 && currentIndex < allEvents.length - 1 ? allEvents[currentIndex + 1] : null;
 
     if (loading) {
         return (
@@ -161,6 +178,41 @@ export default function EventPage() {
                         )}
                     </div>
                 </article>
+
+                {/* Navigation Buttons */}
+                <div className="mt-8 flex justify-between gap-4">
+                    {prevEvent ? (
+                        <Link
+                            href={`/events/${prevEvent.slug}`}
+                            className="flex-1 bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-all group border border-slate-100"
+                        >
+                            <span className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-hover:text-[#05668D] transition-colors">
+                                <ArrowLeft size={14} /> Previous Event
+                            </span>
+                            <h4 className="font-bold text-slate-700 group-hover:text-[#05668D] line-clamp-1 transition-colors">
+                                {prevEvent.acf.event_name}
+                            </h4>
+                        </Link>
+                    ) : (
+                        <div className="flex-1"></div> // Spacer
+                    )}
+
+                    {nextEvent ? (
+                        <Link
+                            href={`/events/${nextEvent.slug}`}
+                            className="flex-1 bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-all group border border-slate-100 text-right"
+                        >
+                            <span className="flex items-center justify-end gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 group-hover:text-[#05668D] transition-colors">
+                                Next Event <ArrowLeft size={14} className="rotate-180" />
+                            </span>
+                            <h4 className="font-bold text-slate-700 group-hover:text-[#05668D] line-clamp-1 transition-colors">
+                                {nextEvent.acf.event_name}
+                            </h4>
+                        </Link>
+                    ) : (
+                        <div className="flex-1"></div> // Spacer
+                    )}
+                </div>
             </div>
         </main>
     );

@@ -86,7 +86,7 @@ export async function getBlogData() {
         throw new Error("NEXT_PUBLIC_WORDPRESS_URL is not defined");
     }
 
-    const res = await fetch(`${WORDPRESS_API_URL}/wp-json/wp/v2/blog?_embed&per_page=3`, {
+    const res = await fetch(`${WORDPRESS_API_URL}/wp-json/wp/v2/blog?_embed&per_page=9`, {
         next: { revalidate: 60 },
     });
 
@@ -193,4 +193,24 @@ export async function getAboutPageNewData() {
 
     const page = await res.json();
     return sanitizeData(page.acf);
+}
+
+export async function getPostBySlug(slug: string) {
+    if (!WORDPRESS_API_URL) {
+        throw new Error("NEXT_PUBLIC_WORDPRESS_URL is not defined");
+    }
+
+    const res = await fetch(`${WORDPRESS_API_URL}/wp-json/wp/v2/blog?slug=${slug}&_embed`, {
+        next: { revalidate: 60 },
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch blog post");
+    }
+
+    const posts = await res.json();
+    if (posts.length === 0) {
+        throw new Error("Post not found");
+    }
+    return sanitizeData(posts[0]);
 }

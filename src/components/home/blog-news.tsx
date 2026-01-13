@@ -8,7 +8,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ACFData, BlogPost } from "@/types/acf";
 import { cn } from "@/lib/utils";
-import BlogDetailModal from "./blog/blog-detail-modal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -30,36 +29,7 @@ interface BlogNewsProps {
 const BlogNews = ({ data, posts }: BlogNewsProps) => {
     const sectionRef = useRef<HTMLElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-    const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
-
-    const handleSelectPost = (post: BlogPost) => {
-        setSelectedPost(post);
-    };
-
-    const handleCloseModal = () => {
-        setSelectedPost(null);
-    };
-
-    const handleNext = () => {
-        if (!selectedPost) return;
-        const currentIndex = posts.findIndex(p => p.id === selectedPost.id);
-        if (currentIndex < posts.length - 1) {
-            setSelectedPost(posts[currentIndex + 1]);
-        }
-    };
-
-    const handlePrev = () => {
-        if (!selectedPost) return;
-        const currentIndex = posts.findIndex(p => p.id === selectedPost.id);
-        if (currentIndex > 0) {
-            setSelectedPost(posts[currentIndex - 1]);
-        }
-    };
-
-    // Determine nav state
-    const currentIndex = selectedPost ? posts.findIndex(p => p.id === selectedPost.id) : -1;
-    const hasNext = currentIndex >= 0 && currentIndex < posts.length - 1;
-    const hasPrev = currentIndex > 0;
+    const [currentPage, setCurrentPage] = useState(0);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -92,7 +62,6 @@ const BlogNews = ({ data, posts }: BlogNewsProps) => {
     }, []);
 
     // Filter to only show the latest 3 posts if more are fetched
-    const latestPosts = posts.slice(0, 3);
 
     return (
         <section
@@ -123,23 +92,20 @@ const BlogNews = ({ data, posts }: BlogNewsProps) => {
                 {/* Grid Container */}
                 <div
                     ref={containerRef}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[450px]"
                 >
-                    {latestPosts.map((post) => (
+                    {posts.slice(currentPage * 3, (currentPage + 1) * 3).map((post) => (
                         <div
                             key={post.id}
-                            onClick={() => handleSelectPost(post)}
-                            className="blog-card group block h-full cursor-pointer"
+                            className="blog-card group block h-full"
                         >
-                            <div
-                                className="h-full rounded-3xl p-4 bg-white transition-all duration-300 hover:-translate-y-2"
-                                style={{
-                                    background: "linear-gradient(145deg, #E2E8EC, #FFFFFF)",
-                                    boxShadow: "5px 5px 15px #D1D9E6, -5px -5px 15px #FFFFFF",
-                                }}
+                            <Link
+                                id={`blog-post-${post.id}`}
+                                href={`/blog/${post.slug}`}
+                                className="block h-full rounded-3xl p-4 bg-white transition-all duration-300 hover:-translate-y-2 flex flex-col shadow-lg hover:shadow-xl border border-slate-100"
                             >
                                 {/* Image Container */}
-                                <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden mb-6 shadow-sm">
+                                <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden mb-6 shadow-sm flex-shrink-0">
                                     {post.acf.blog_image?.url ? (
                                         <Image
                                             src={post.acf.blog_image.url}
@@ -155,7 +121,7 @@ const BlogNews = ({ data, posts }: BlogNewsProps) => {
                                 </div>
 
                                 {/* Content */}
-                                <div className="px-2 pb-4 space-y-3">
+                                <div className="px-2 pb-4 space-y-3 flex-1 flex flex-col">
                                     {/* Meta Data */}
                                     <div className="flex items-center justify-between">
                                         <span className={cn("text-xs font-bold text-[#05668D] uppercase tracking-wider", montserrat.className)}>
@@ -174,25 +140,31 @@ const BlogNews = ({ data, posts }: BlogNewsProps) => {
                                         )}
                                         dangerouslySetInnerHTML={{ __html: post.acf.blog_title || post.title.rendered }}
                                     />
-
                                 </div>
-                            </div>
+                            </Link>
                         </div>
                     ))}
                 </div>
-            </div>
 
-            {/* Blog Detail Modal */}
-            {selectedPost && (
-                <BlogDetailModal
-                    post={selectedPost}
-                    onClose={handleCloseModal}
-                    onNext={handleNext}
-                    onPrev={handlePrev}
-                    hasNext={hasNext}
-                    hasPrev={hasPrev}
-                />
-            )}
+                {/* Pagination Dots */}
+                {posts.length > 3 && (
+                    <div className="flex justify-center gap-2 mt-12">
+                        {Array.from({ length: Math.ceil(posts.length / 3) }).map((_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setCurrentPage(index)}
+                                className={cn(
+                                    "w-3 h-3 rounded-full transition-all duration-300",
+                                    currentPage === index
+                                        ? "bg-[#05668D] w-6"
+                                        : "bg-slate-300 hover:bg-slate-400"
+                                )}
+                                aria-label={`Go to page ${index + 1}`}
+                            />
+                        ))}
+                    </div>
+                )}
+            </div>
         </section >
     );
 };
