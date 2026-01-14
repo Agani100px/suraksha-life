@@ -180,6 +180,7 @@ export interface ACFData {
   support: SupportLink[];
   header_logo: ACFImage;
   footer_logo: ACFImage;
+  favicon?: ACFImage; // Added for dynamic site icon
 }
 
 export interface ContactDetail {
