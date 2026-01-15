@@ -42,7 +42,7 @@ export default function Testimonial({ data }: TestimonialProps) {
                         </h4>
                     )}
                     {data.test_section_title && (
-                        <h2 className="text-5xl font-bold text-[#2d3e3e]">
+                        <h2 className="text-3xl md:text-5xl font-bold text-[#2d3e3e]">
                             {data.test_section_title}
                         </h2>
                     )}
@@ -101,7 +101,7 @@ export default function Testimonial({ data }: TestimonialProps) {
                         return (
                             <div
                                 key={item.user_photo_feedback.ID || index}
-                                className="absolute top-0 bottom-0 m-auto w-full max-w-sm md:max-w-md h-fit transition-all duration-700 ease-in-out"
+                                className={`absolute top-0 bottom-0 m-auto w-[90%] md:w-full md:max-w-md h-fit transition-all duration-700 ease-in-out ${!isCenter ? "hidden md:block" : ""}`}
                                 style={{
                                     transform: `translateX(${xTrans}) scale(${scale})`,
                                     zIndex: zIndex,
@@ -113,7 +113,7 @@ export default function Testimonial({ data }: TestimonialProps) {
                                     if (isLeft) prevSlide();
                                 }}
                             >
-                                <div className="bg-gradient-to-b from-[#0097a7] to-[#00bfa5] text-white p-8 rounded-2xl shadow-xl flex flex-col items-center text-center h-full cursor-pointer">
+                                <div className="bg-gradient-to-b from-[#0097a7] to-[#00bfa5] text-white p-6 md:p-8 rounded-2xl shadow-xl flex flex-col items-center text-center h-full cursor-pointer">
                                     {/* User Image */}
                                     <div className="relative w-28 h-28 mb-4">
                                         <div className="absolute inset-0 rounded-full border-4 border-white/20 overflow-hidden shadow-md">
@@ -148,8 +148,8 @@ export default function Testimonial({ data }: TestimonialProps) {
                                             <Star
                                                 key={i}
                                                 className={`w-5 h-5 ${i < Number(item.star_range)
-                                                        ? "fill-white text-white"
-                                                        : "fill-transparent text-white/40"
+                                                    ? "fill-white text-white"
+                                                    : "fill-transparent text-white/40"
                                                     }`}
                                             />
                                         ))}

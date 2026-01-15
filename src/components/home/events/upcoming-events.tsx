@@ -51,14 +51,14 @@ const UpcomingEvents = ({ events, allEvents, onSelectEvent }: UpcomingEventsProp
                                     <div
                                         key={event.id}
                                         onClick={() => onSelectEvent(event)}
-                                        className="w-full h-[140px] rounded-xl p-6 flex flex-col md:flex-row gap-6 items-start transition-all duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer"
+                                        className="w-full h-auto md:h-[140px] rounded-xl p-4 md:p-6 flex flex-col md:flex-row gap-4 md:gap-6 items-start transition-all duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer"
                                         style={{
                                             background: "linear-gradient(145deg, #E2E8EC, #FFFFFF)",
                                             boxShadow: "5px 5px 15px #D1D9E6, -5px -5px 15px #FFFFFF",
                                         }}
                                     >
                                         {/* Event Image Thumbnail */}
-                                        <div className="w-20 h-20 md:w-24 md:h-24 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 relative">
+                                        <div className="w-full h-40 md:w-24 md:h-24 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 relative">
                                             {event.acf.event_image?.url ? (
                                                 <Image
                                                     src={event.acf.event_image.url}
