@@ -120,7 +120,7 @@ export default function Testimonial({ data }: TestimonialProps) {
                                     if (isLeft) prevSlide();
                                 }}
                             >
-                                <div className="bg-gradient-to-b from-[#0097a7] to-[#00bfa5] text-white p-6 md:p-8 rounded-2xl shadow-xl flex flex-col items-center text-center h-full cursor-pointer">
+                                <div className="bg-gradient-to-b from-[#0097a7] to-[#00bfa5] text-white p-6 md:p-8 rounded-2xl shadow-xl flex flex-col items-center text-center h-auto md:h-full cursor-pointer">
                                     {/* User Image */}
                                     <div className="relative w-28 h-28 mb-4">
                                         <div className="absolute inset-0 rounded-full border-4 border-white/20 overflow-hidden shadow-md">
