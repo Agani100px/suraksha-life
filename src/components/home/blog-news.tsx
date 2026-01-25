@@ -118,15 +118,15 @@ const BlogNews = ({ data, posts }: BlogNewsProps) => {
                                 className="block h-full rounded-3xl p-4 bg-white transition-all duration-300 hover:-translate-y-2 flex flex-col shadow-lg hover:shadow-xl border border-slate-100"
                             >
                                 {/* Image Container */}
-                                <div className="relative w-full rounded-2xl overflow-hidden mb-6 shadow-sm flex-shrink-0">
+                                <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden mb-6 shadow-sm flex-shrink-0 bg-slate-50">
                                     {post.acf.blog_image?.url ? (
                                         <Image
                                             src={post.acf.blog_image.url}
                                             alt={post.acf.blog_image.alt || post.title.rendered}
                                             width={post.acf.blog_image.width}
                                             height={post.acf.blog_image.height}
-                                            style={{ width: '100%', height: 'auto' }}
-                                            className="transition-transform duration-500 group-hover:scale-105"
+                                            style={{ width: '100%', height: '100%' }}
+                                            className="object-contain transition-transform duration-500 group-hover:scale-105"
                                         />
                                     ) : (
                                         <div className="w-full h-full bg-slate-200 flex items-center justify-center text-slate-400">
