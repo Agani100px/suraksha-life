@@ -195,6 +195,7 @@ export async function getAboutPageNewData() {
     return sanitizeData(page.acf);
 }
 
+
 export async function getPostBySlug(slug: string) {
     if (!WORDPRESS_API_URL) {
         throw new Error("NEXT_PUBLIC_WORDPRESS_URL is not defined");
@@ -213,4 +214,58 @@ export async function getPostBySlug(slug: string) {
         throw new Error("Post not found");
     }
     return sanitizeData(posts[0]);
+}
+
+export async function getPrivacyPolicyData() {
+    if (!WORDPRESS_API_URL) {
+        throw new Error("NEXT_PUBLIC_WORDPRESS_URL is not defined");
+    }
+
+    // Fetch specifically the page with ID 3 as requested
+    const res = await fetch(`${WORDPRESS_API_URL}/wp-json/wp/v2/pages/3?_embed`, {
+        next: { revalidate: 60 },
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch privacy policy data");
+    }
+
+    const page = await res.json();
+    return sanitizeData(page);
+}
+
+export async function getRefundPolicyData() {
+    if (!WORDPRESS_API_URL) {
+        throw new Error("NEXT_PUBLIC_WORDPRESS_URL is not defined");
+    }
+
+    // Fetch specifically the page with ID 602 as requested
+    const res = await fetch(`${WORDPRESS_API_URL}/wp-json/wp/v2/pages/602?_embed`, {
+        next: { revalidate: 60 },
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch refund policy data");
+    }
+
+    const page = await res.json();
+    return sanitizeData(page);
+}
+
+export async function getTermsData() {
+    if (!WORDPRESS_API_URL) {
+        throw new Error("NEXT_PUBLIC_WORDPRESS_URL is not defined");
+    }
+
+    // Fetch specifically the page with ID 608 as requested
+    const res = await fetch(`${WORDPRESS_API_URL}/wp-json/wp/v2/pages/608?_embed`, {
+        next: { revalidate: 60 },
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch terms data");
+    }
+
+    const page = await res.json();
+    return sanitizeData(page);
 }

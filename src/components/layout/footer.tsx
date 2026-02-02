@@ -46,6 +46,18 @@ const Footer = ({ data }: FooterProps) => {
             return "/contact";
         }
 
+        if (lowerName.includes("privacy") || lowerLink.includes("privacy-policy")) {
+            return "/privacy-policy";
+        }
+
+        if (lowerName.includes("refund") || lowerLink.includes("refund-policy")) {
+            return "/refund-policy";
+        }
+
+        if (lowerName.includes("terms") || lowerLink.includes("terms-conditions")) {
+            return "/terms-conditions";
+        }
+
         if (lowerName === "home") {
             return "/";
         }
