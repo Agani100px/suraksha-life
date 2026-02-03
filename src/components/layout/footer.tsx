@@ -167,8 +167,8 @@ const Footer = ({ data }: FooterProps) => {
                         </div>
                     </div>
 
-                    {/* Column 2: Quick Links (Span 3) */}
-                    <div className="lg:col-span-3 lg:pl-12">
+                    {/* Column 2: Quick Links (Span 4) */}
+                    <div className="lg:col-span-4 lg:pl-12">
                         <h3 className={cn("text-[#05668D] font-bold text-lg mb-4 md:mb-8 uppercase tracking-wide", montserrat.className)}>
                             Quick Link
                         </h3>
@@ -186,8 +186,8 @@ const Footer = ({ data }: FooterProps) => {
                         </ul>
                     </div>
 
-                    {/* Column 3: Support (Span 3) */}
-                    <div className="lg:col-span-3">
+                    {/* Column 3: Support (Span 4) */}
+                    <div className="lg:col-span-4 lg:pl-12">
                         <h3 className={cn("text-[#05668D] font-bold text-lg mb-4 md:mb-8 uppercase tracking-wide", montserrat.className)}>
                             Support
                         </h3>
@@ -199,31 +199,6 @@ const Footer = ({ data }: FooterProps) => {
                                         className={cn("text-slate-600 hover:text-[#05668D] transition-colors text-base font-medium", poppins.className)}
                                     >
                                         {item.support_link}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Column 4: Developers (Span 2) */}
-                    <div className="lg:col-span-2">
-                        <h3 className={cn("text-[#05668D] font-bold text-lg mb-4 md:mb-8 uppercase tracking-wide", montserrat.className)}>
-                            Developers
-                        </h3>
-                        <ul className="space-y-2 md:space-y-5">
-                            {[
-                                "Documentation",
-                                "Authentication",
-                                "API Reference",
-                                "Support",
-                                "Open Source"
-                            ].map((item, index) => (
-                                <li key={index}>
-                                    <Link
-                                        href="#"
-                                        className={cn("text-slate-600 hover:text-[#05668D] transition-colors text-base font-medium", poppins.className)}
-                                    >
-                                        {item}
                                     </Link>
                                 </li>
                             ))}
