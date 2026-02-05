@@ -37,12 +37,44 @@ export default async function RefundPolicyPage() {
     }
 
     // Fallback if home page data fails (critical for header/footer)
+    // Fallback if home page data fails (critical for header/footer)
     if (!pageData) {
-        return (
-            <div className="flex h-screen items-center justify-center">
-                <p>Failed to load site configuration.</p>
-            </div>
-        );
+        console.warn("Using fallback site configuration for Refund Policy due to API failure.");
+        pageData = {
+            title: { rendered: "Suraksha Life" },
+            content: { rendered: "" },
+            nav_bar: [
+                { nav_bar_tab_name: "Home", tab_link: "/" },
+                { nav_bar_tab_name: "Services", tab_link: "/services" },
+                { nav_bar_tab_name: "Events", tab_link: "/events" },
+                { nav_bar_tab_name: "Blog", tab_link: "/blog" },
+                { nav_bar_tab_name: "Contact", tab_link: "/contact" },
+            ],
+            header_logo: null,
+            button_header: "Book An Appointment",
+            button_header_link: "/contact",
+            footer_logo: null,
+            footer_description: "Suraksha Life - Islandwide cancer awareness series.",
+            social_media_details: [],
+            contact_info: {
+                mobile_number: "",
+                email_address: "",
+                location_address: "",
+                location_map_link: ""
+            },
+            hero: [],
+            facilities: [],
+            about_me: [],
+            services_list: [],
+            events_list: [],
+            schedule: [],
+            online_channeling: [],
+            blog_news: [],
+            video_learning: [],
+            resources_list: [],
+            testimonial: [],
+            short_section: []
+        } as unknown as ACFData;
     }
 
     return (
