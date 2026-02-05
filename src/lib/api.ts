@@ -1,5 +1,5 @@
 
-const WORDPRESS_API_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL?.replace(/\/$/, "");
+const WORDPRESS_API_URL = (process.env.NEXT_PUBLIC_WORDPRESS_URL || "https://web.surakshalife.com").replace(/\/$/, "");
 
 // Export a robust public URL for frontend components to use
 export const PUBLIC_WORDPRESS_URL = "https://web.surakshalife.com";
